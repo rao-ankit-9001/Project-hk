@@ -101,6 +101,9 @@ app.post("/logout", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Hello from server");
 });
+app.get("/tiptop", (req, res) => {
+  res.send("tiptop");
+});
 
 // Start server
 app.listen(PORT, () => {
