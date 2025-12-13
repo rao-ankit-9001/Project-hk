@@ -109,18 +109,31 @@ app.get("/health", async (req, res) => {
   const checkpoints = [];
 
   try {
-    // ✅ Step 1: Server is alive
+    // ✅ Step 1: Server alive
     checkpoints.push({ step: "server", status: "ok" });
 
-    // ✅ Step 2: Env variable check
+    // ✅ Step 2: PORT check
+    checkpoints.push({
+      step: "port",
+      status: process.env.PORT ? "ok" : "missing",
+      detail: process.env.PORT || "default 5000"
+    });
+
+    // ✅ Step 3: Env variable check (Mongo URI)
     if (!process.env.MONGO_URI) {
-      checkpoints.push({ step: "env", status: "missing", detail: "MONGO_URI not set" });
-      return res.status(500).json({ status: "error", checkpoints });
+      checkpoints.push({ step: "env_mongo", status: "missing", detail: "MONGO_URI not set" });
     } else {
-      checkpoints.push({ step: "env", status: "ok", detail: "MONGO_URI found" });
+      checkpoints.push({ step: "env_mongo", status: "ok", detail: "MONGO_URI found" });
     }
 
-    // ✅ Step 3: Connection state check
+    // ✅ Step 4: Env variable check (JWT Secret)
+    if (!process.env.JWT_SECRET) {
+      checkpoints.push({ step: "env_jwt", status: "missing", detail: "JWT_SECRET not set" });
+    } else {
+      checkpoints.push({ step: "env_jwt", status: "ok", detail: "JWT_SECRET found" });
+    }
+
+    // ✅ Step 5: Mongoose connection state
     const dbState = mongoose.connection.readyState;
     let dbStatus = "unknown";
     switch (dbState) {
@@ -131,20 +144,25 @@ app.get("/health", async (req, res) => {
     }
     checkpoints.push({ step: "mongoose_state", status: dbStatus });
 
-    // ✅ Step 4: Test query to Mongo
-    try {
-      await mongoose.connection.db.admin().ping();
-      checkpoints.push({ step: "ping", status: "ok", detail: "Ping successful" });
-    } catch (pingErr) {
-      checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
-    }
+    // ✅ Step 6: Ping DB if connected
+    if (dbState === 1) {
+      try {
+        await mongoose.connection.db.admin().ping();
+        checkpoints.push({ step: "ping", status: "ok", detail: "Ping successful" });
+      } catch (pingErr) {
+        checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
+      }
 
-    // ✅ Step 5: Sample collection check
-    try {
-      const collections = await mongoose.connection.db.listCollections().toArray();
-      checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
-    } catch (colErr) {
-      checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
+      // ✅ Step 7: List collections
+      try {
+        const collections = await mongoose.connection.db.listCollections().toArray();
+        checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
+      } catch (colErr) {
+        checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
+      }
+    } else {
+      checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected" });
+      checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
     }
 
     // ✅ Final response
