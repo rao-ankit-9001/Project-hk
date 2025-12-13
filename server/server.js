@@ -106,17 +106,60 @@ app.get("/tiptop", (req, res) => {
 });
 
 app.get("/health", async (req, res) => {
+  const checkpoints = [];
+
   try {
-    const dbState = mongoose.connection.readyState; // 1 = connected
+    // ✅ Step 1: Server is alive
+    checkpoints.push({ step: "server", status: "ok" });
+
+    // ✅ Step 2: Env variable check
+    if (!process.env.MONGO_URI) {
+      checkpoints.push({ step: "env", status: "missing", detail: "MONGO_URI not set" });
+      return res.status(500).json({ status: "error", checkpoints });
+    } else {
+      checkpoints.push({ step: "env", status: "ok", detail: "MONGO_URI found" });
+    }
+
+    // ✅ Step 3: Connection state check
+    const dbState = mongoose.connection.readyState;
+    let dbStatus = "unknown";
+    switch (dbState) {
+      case 0: dbStatus = "disconnected"; break;
+      case 1: dbStatus = "connected"; break;
+      case 2: dbStatus = "connecting"; break;
+      case 3: dbStatus = "disconnecting"; break;
+    }
+    checkpoints.push({ step: "mongoose_state", status: dbStatus });
+
+    // ✅ Step 4: Test query to Mongo
+    try {
+      await mongoose.connection.db.admin().ping();
+      checkpoints.push({ step: "ping", status: "ok", detail: "Ping successful" });
+    } catch (pingErr) {
+      checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
+    }
+
+    // ✅ Step 5: Sample collection check
+    try {
+      const collections = await mongoose.connection.db.listCollections().toArray();
+      checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
+    } catch (colErr) {
+      checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
+    }
+
+    // ✅ Final response
     res.json({
       status: "ok",
-      db: dbState === 1 ? "connected" : "not_connected",
-      timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+      checkpoints,
+      timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
     });
+
   } catch (err) {
-    res.status(500).json({ status: "error", error: err.message });
+    checkpoints.push({ step: "catch", status: "fail", detail: err.message });
+    res.status(500).json({ status: "error", checkpoints });
   }
 });
+
 
 // Start server
 app.listen(PORT, () => {
