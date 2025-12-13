@@ -102,7 +102,7 @@ app.get("/", (req, res) => {
   res.send("Hello from server");
 });
 app.get("/tiptop", (req, res) => {
-  res.send("tiptop");
+  res.send("hello tiptop");
 });
 
 // Start server
