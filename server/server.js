@@ -105,6 +105,19 @@ app.get("/tiptop", (req, res) => {
   res.send("hello tiptop");
 });
 
+app.get("/health", async (req, res) => {
+  try {
+    const dbState = mongoose.connection.readyState; // 1 = connected
+    res.json({
+      status: "ok",
+      db: dbState === 1 ? "connected" : "not_connected",
+      timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    });
+  } catch (err) {
+    res.status(500).json({ status: "error", error: err.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
