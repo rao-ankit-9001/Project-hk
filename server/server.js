@@ -58,21 +58,21 @@ app.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user._id, username: user.username }, SECRET_KEY, { expiresIn: "1h" });
 
     // Login route ke andar
-let ip = req.headers["x-forwarded-for"] || req.clientIp;
-if (ip === "::1") ip = "127.0.0.1"; // normalize localhost
+    let ip = req.headers["x-forwarded-for"] || req.clientIp;
+    if (ip === "::1") ip = "127.0.0.1"; // normalize localhost
 
-const activity = new Activity({
-  username: user.username,
-  ip,
-  device: req.headers["user-agent"],
-  location: {
-    latitude: req.body.latitude || null,
-    longitude: req.body.longitude || null,
-  },
-  // ✅ Save IST time as Date object
-  loginTime: moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")
+    const activity = new Activity({
+      username: user.username,
+      ip,
+      device: req.headers["user-agent"],
+      location: {
+        latitude: req.body.latitude || null,
+        longitude: req.body.longitude || null,
+      },
+      // ✅ Save IST time as Date object
+      loginTime: moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")
 
-});
+    });
 
     await activity.save();
 
@@ -145,37 +145,42 @@ app.get("/health", async (req, res) => {
     checkpoints.push({ step: "mongoose_state", status: dbStatus });
 
     // ✅ Step 6: Ping DB if connected
+    // ✅ Step 6: Ping DB if connected
     if (dbState === 1) {
       try {
-        await mongoose.connection.db.admin().ping();
-        checkpoints.push({ step: "ping", status: "ok", detail: "Ping successful" });
+        const pingResult = await mongoose.connection.db.admin().command({ ping: 1 });
+        checkpoints.push({ step: "ping", status: "ok", detail: pingResult });
       } catch (pingErr) {
         checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
       }
-
-      // ✅ Step 7: List collections
-      try {
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
-      } catch (colErr) {
-        checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
-      }
     } else {
-      checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected" });
-      checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
+      checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected, check URI or IP whitelist" });
     }
 
-    // ✅ Final response
-    res.json({
-      status: "ok",
-      checkpoints,
-      timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-    });
 
-  } catch (err) {
-    checkpoints.push({ step: "catch", status: "fail", detail: err.message });
-    res.status(500).json({ status: "error", checkpoints });
+    // ✅ Step 7: List collections
+    try {
+      const collections = await mongoose.connection.db.listCollections().toArray();
+      checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
+    } catch (colErr) {
+      checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
+    }
+  } else {
+    checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected" });
+    checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
   }
+
+  // ✅ Final response
+  res.json({
+    status: "ok",
+    checkpoints,
+    timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+  });
+
+} catch (err) {
+  checkpoints.push({ step: "catch", status: "fail", detail: err.message });
+  res.status(500).json({ status: "error", checkpoints });
+}
 });
 
 
