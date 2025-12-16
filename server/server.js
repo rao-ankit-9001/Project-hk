@@ -7,7 +7,6 @@ const requestIp = require("request-ip");   // ✅ new
 require("dotenv").config();
 const moment = require("moment-timezone");
 
-
 const PORT = process.env.PORT || 5000;
 const app = express();
 const MONGB_UR = process.env.MONGO_URI;
@@ -71,7 +70,6 @@ app.post("/login", async (req, res) => {
       },
       // ✅ Save IST time as Date object
       loginTime: moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")
-
     });
 
     await activity.save();
@@ -97,7 +95,8 @@ app.post("/logout", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-// Root route (optional)
+
+// Root routes
 app.get("/", (req, res) => {
   res.send("Hello from server");
 });
@@ -105,6 +104,7 @@ app.get("/tiptop", (req, res) => {
   res.send("hello tiptop");
 });
 
+// Health route
 app.get("/health", async (req, res) => {
   const checkpoints = [];
 
@@ -145,7 +145,6 @@ app.get("/health", async (req, res) => {
     checkpoints.push({ step: "mongoose_state", status: dbStatus });
 
     // ✅ Step 6: Ping DB if connected
-    // ✅ Step 6: Ping DB if connected
     if (dbState === 1) {
       try {
         const pingResult = await mongoose.connection.db.admin().command({ ping: 1 });
@@ -153,36 +152,31 @@ app.get("/health", async (req, res) => {
       } catch (pingErr) {
         checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
       }
+
+      // ✅ Step 7: List collections
+      try {
+        const collections = await mongoose.connection.db.listCollections().toArray();
+        checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
+      } catch (colErr) {
+        checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
+      }
     } else {
-      checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected, check URI or IP whitelist" });
+      checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected" });
+      checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
     }
 
+    // ✅ Final response
+    res.json({
+      status: "ok",
+      checkpoints,
+      timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
+    });
 
-    // ✅ Step 7: List collections
-    try {
-      const collections = await mongoose.connection.db.listCollections().toArray();
-      checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
-    } catch (colErr) {
-      checkpoints.push({ step: "collections", status: "fail", detail: colErr.message });
-    }
-  } else {
-    checkpoints.push({ step: "ping", status: "skip", detail: "DB not connected" });
-    checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
+  } catch (err) {
+    checkpoints.push({ step: "catch", status: "fail", detail: err.message });
+    res.status(500).json({ status: "error", checkpoints });
   }
-
-  // ✅ Final response
-  res.json({
-    status: "ok",
-    checkpoints,
-    timeIST: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })
-  });
-
-} catch (err) {
-  checkpoints.push({ step: "catch", status: "fail", detail: err.message });
-  res.status(500).json({ status: "error", checkpoints });
-}
 });
-
 
 // Start server
 app.listen(PORT, () => {
