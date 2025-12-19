@@ -244,7 +244,7 @@ app.get("/health", async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT || 5000, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
