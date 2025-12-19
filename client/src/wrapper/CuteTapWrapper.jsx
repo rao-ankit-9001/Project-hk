@@ -46,7 +46,7 @@ export default function CuteTapWrapper({
             animate={{ opacity: 1, scale: [0, 1.5, 1], rotate: [0, 15, -15, 0] }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            💖✨🌸🧸
+            💖✨🌸
           </motion.div>
         )}
       </div>

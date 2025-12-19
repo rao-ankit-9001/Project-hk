@@ -3,9 +3,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const requestIp = require("request-ip");   // ✅ new
+const requestIp = require("request-ip");
 require("dotenv").config();
 const moment = require("moment-timezone");
+const cron = require("node-cron");
+const axios = require("axios");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -15,7 +17,7 @@ const SECRET_KEY = process.env.JWT_SECRET;
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(requestIp.mw()); // ✅ attach IP middleware
+app.use(requestIp.mw());
 
 // MongoDB connection
 mongoose.connect(MONGO_URI);
@@ -56,9 +58,9 @@ app.post("/login", async (req, res) => {
     // Generate JWT token
     const token = jwt.sign({ id: user._id, username: user.username }, SECRET_KEY, { expiresIn: "1h" });
 
-    // Login route ke andar
+    // Capture IP + device info
     let ip = req.headers["x-forwarded-for"] || req.clientIp;
-    if (ip === "::1") ip = "127.0.0.1"; // normalize localhost
+    if (ip === "::1") ip = "127.0.0.1";
 
     const activity = new Activity({
       username: user.username,
@@ -68,7 +70,6 @@ app.post("/login", async (req, res) => {
         latitude: req.body.latitude || null,
         longitude: req.body.longitude || null,
       },
-      // ✅ Save IST time as Date object
       loginTime: moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss")
     });
 
@@ -109,31 +110,25 @@ app.get("/health", async (req, res) => {
   const checkpoints = [];
 
   try {
-    // ✅ Step 1: Server alive
     checkpoints.push({ step: "server", status: "ok" });
-
-    // ✅ Step 2: PORT check
     checkpoints.push({
       step: "port",
       status: process.env.PORT ? "ok" : "missing",
       detail: process.env.PORT || "default 5000"
     });
 
-    // ✅ Step 3: Env variable check (Mongo URI)
     if (!process.env.MONGO_URI) {
       checkpoints.push({ step: "env_mongo", status: "missing", detail: "MONGO_URI not set" });
     } else {
       checkpoints.push({ step: "env_mongo", status: "ok", detail: "MONGO_URI found" });
     }
 
-    // ✅ Step 4: Env variable check (JWT Secret)
     if (!process.env.JWT_SECRET) {
       checkpoints.push({ step: "env_jwt", status: "missing", detail: "JWT_SECRET not set" });
     } else {
       checkpoints.push({ step: "env_jwt", status: "ok", detail: "JWT_SECRET found" });
     }
 
-    // ✅ Step 5: Mongoose connection state
     const dbState = mongoose.connection.readyState;
     let dbStatus = "unknown";
     switch (dbState) {
@@ -144,7 +139,6 @@ app.get("/health", async (req, res) => {
     }
     checkpoints.push({ step: "mongoose_state", status: dbStatus });
 
-    // ✅ Step 6: Ping DB if connected
     if (dbState === 1) {
       try {
         const pingResult = await mongoose.connection.db.admin().command({ ping: 1 });
@@ -153,7 +147,6 @@ app.get("/health", async (req, res) => {
         checkpoints.push({ step: "ping", status: "fail", detail: pingErr.message });
       }
 
-      // ✅ Step 7: List collections
       try {
         const collections = await mongoose.connection.db.listCollections().toArray();
         checkpoints.push({ step: "collections", status: "ok", detail: collections.map(c => c.name) });
@@ -165,7 +158,6 @@ app.get("/health", async (req, res) => {
       checkpoints.push({ step: "collections", status: "skip", detail: "DB not connected" });
     }
 
-    // ✅ Final response
     res.json({
       status: "ok",
       checkpoints,
@@ -175,6 +167,16 @@ app.get("/health", async (req, res) => {
   } catch (err) {
     checkpoints.push({ step: "catch", status: "fail", detail: err.message });
     res.status(500).json({ status: "error", checkpoints });
+  }
+});
+
+// Self-ping cron job (to keep Render awake)
+cron.schedule("*/5 * * * *", async () => {
+  try {
+    await axios.get("https://your-app.onrender.com/health"); // replace with your Render URL
+    console.log("Ping sent to keep server awake");
+  } catch (err) {
+    console.error("Ping failed:", err.message);
   }
 });
 

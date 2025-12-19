@@ -12,7 +12,11 @@ function App() {
 
   return (
     <BrowserRouter>
-      {loading && <Loader />} {/* ✅ Loader overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <Loader />
+        </div>
+      )}
       <Routes>
         <Route path="/" element={<LoginForm setLoading={setLoading} />} />
         <Route
@@ -20,8 +24,8 @@ function App() {
           element={
             <PrivateRoute>
               <>
-                <Nav setLoading={setLoading} /> {/* ✅ pass loader trigger */}
-                <Mainroutes />
+                <Nav setLoading={setLoading} />
+                <Mainroutes setLoading={setLoading} /> {/* ✅ pass down */}
                 <Footer />
               </>
             </PrivateRoute>

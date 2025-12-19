@@ -89,6 +89,7 @@
     font-size: 24px;
     cursor: pointer;
     margin-left: auto;
+    z-index: 40;
 }
 
 /* 📱 Mobile view (max-width: 600px) */
