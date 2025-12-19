@@ -42,7 +42,7 @@ export default function Whatsapp() {
   }, [isFullscreen]);
 
   return (
-    <div className={`${isFullscreen ? "fixed inset-0 z-50 bg-[#e5ddd5] flex items-center justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center"}`}>
+    <div className={`${isFullscreen ? "fixed inset-0 z-50 bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center"}`}>
       <div className={`flex flex-col w-full ${isFullscreen ? "h-screen" : "max-w-full md:max-w-5xl h-auto md:h-[90vh]"}`}>
         
         {/* CHAT WINDOW */}
