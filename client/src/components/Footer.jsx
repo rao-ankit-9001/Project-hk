@@ -20,7 +20,7 @@ function Footer() {
       </div>
 
       {/* Teddy + Popup wrapper */}
-      <div className="fixed bottom-5 right-5 z-20">
+      <div className="teddy fixed bottom-5 right-5 z-20">
         {/* Teddy bear */}
         <div
           className="text-5xl filter drop-shadow-lg animate-bounce cursor-pointer"

@@ -7,6 +7,22 @@ body {
     radial-gradient(1200px 800px at 15% 0%, #ffe6f0, transparent 60%),
     radial-gradient(900px 700px at 90% 0%, #eae4ff, transparent 60%),
     linear-gradient(180deg, #fff, #fff);
+  margin: 0; /* remove browser default gap */
+}
+
+/* Ensure main content is not hidden under a fixed navbar */
+.main-content {
+  padding-top: 0; /* removed gap so content touches navbar */
+}
+
+/* Remove top margin of the first child inside main-content (common cause of gaps) */
+.main-content > :first-child {
+  margin-top: 0 !important;
+}
+
+/* Hide teddy when Whatsapp is fullscreen */
+body.whatsapp-fullscreen .teddy {
+  display: none !important;
 }
 
 

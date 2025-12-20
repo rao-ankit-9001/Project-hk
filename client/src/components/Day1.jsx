@@ -63,7 +63,7 @@ function Day1() {
 
   return (
     <>
-    <div className="Main relative">
+    <div className="Main relative -pt-10">
       
 
       {/* Soft sparkles */}

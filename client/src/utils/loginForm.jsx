@@ -28,6 +28,83 @@ export default function LoginForm({ setLoading }) {
           sessionStorage.setItem("token", data.token);
           sessionStorage.setItem("username", data.username);
 
+          // Prefetch a seeded set of messages so chat is ready when user navigates
+          try {
+            const SAMPLE = `23/08/23, 5:35 pm - Rao_ankit: hii
+23/08/23, 5:35 pm - Rao_ankit: hlo
+23/08/23, 5:35 pm - Buddhudi: 😁😁
+23/08/23, 5:35 pm - Rao_ankit: 👊👊
+23/08/23, 5:35 pm - Buddhudi: 😝
+23/08/23, 5:35 pm - Rao_ankit: dp nhi dikha rha mujhe
+23/08/23, 5:35 pm - Rao_ankit: ha ab dikhai h
+23/08/23, 5:35 pm - Buddhudi: ab dekho
+23/08/23, 5:36 pm - Rao_ankit: 😁
+23/08/23, 5:36 pm - Buddhudi: aapki to jase jaan nikal jati h dp nhi dikhti tab
+23/08/23, 5:36 pm - Buddhudi: 🤭🤭
+23/08/23, 5:36 pm - Rao_ankit: ha
+23/08/23, 5:36 pm - Rao_ankit: merko mja nhi aata jab tak samne wala ba dikhe
+23/08/23, 5:36 pm - Rao_ankit: 🤭
+23/08/23, 5:37 pm - Buddhudi: 🙃 acha ji
+23/08/23, 5:37 pm - Rao_ankit: haji
+23/08/23, 5:37 pm - Rao_ankit: priya
+23/08/23, 5:37 pm - Rao_ankit: 🤭
+23/08/23, 5:37 pm - Rao_ankit: le hi liye aapke number aakhir me 😆😆
+23/08/23, 5:37 pm - Buddhudi: ha
+23/08/23, 5:37 pm - Buddhudi: ha mane he diye h
+23/08/23, 5:37 pm - Rao_ankit: 🤭
+23/08/23, 5:37 pm - Buddhudi: merko lga kya pareshan. howo ge
+23/08/23, 5:37 pm - Rao_ankit: call kroge kya ab
+23/08/23, 5:38 pm - Buddhudi: abhi nhi
+23/08/23, 5:38 pm - Rao_ankit: nhi nhi
+23/08/23, 5:38 pm - Rao_ankit: to
+23/08/23, 5:38 pm - Buddhudi: sachi me
+23/08/23, 5:38 pm - Buddhudi: baad me kre ge 1 date k baad
+23/08/23, 5:39 pm - Rao_ankit: ☹️
+23/08/23, 5:39 pm - Buddhudi: ab pitt jao ge
+23/08/23, 5:39 pm - Buddhudi: ase muh bnao ge to
+23/08/23, 5:39 pm - Rao_ankit: aaj kr lete uske baad kr lenge aap bologe tab
+23/08/23, 5:39 pm - Rao_ankit: 🤭😁
+23/08/23, 5:39 pm - Buddhudi: yaar ajj nhi
+23/08/23, 5:40 pm - Buddhudi: risk h ajj bhaar kabhi koi aa rha h kabhi koi
+23/08/23, 5:40 pm - Buddhudi: 😁😁
+23/08/23, 5:40 pm - Rao_ankit: dekh lo to khidki me se 😁
+23/08/23, 5:40 pm - Buddhudi: or koi ruk k baat sun ne lgg jaye to
+23/08/23, 5:41 pm - Rao_ankit: ha tumhari hi sunega
+23/08/23, 5:41 pm - Rao_ankit: itni jor se chilaoge kya
+23/08/23, 5:41 pm - Buddhudi: 🤭ha
+23/08/23, 5:41 pm - Rao_ankit: tik h sun lene do to 😄
+23/08/23, 5:41 pm - Buddhudi: fir baato se pta lg jaye ga ladke ka call h
+23/08/23, 5:41 pm - Buddhudi: aacha merko to dar lgta h
+23/08/23, 5:41 pm - Buddhudi: 😬
+23/08/23, 5:41 pm - Rao_ankit: dar k aage jeet h
+23/08/23, 5:42 pm - Rao_ankit: 🤭
+23/08/23, 5:42 pm - Buddhudi: dar k aage fir sadhi hai 😝🤣🤣
+23/08/23, 5:42 pm - Rao_ankit: 👊👊
+23/08/23, 5:42 pm - Buddhudi: aap kya bta rhe the
+23/08/23, 5:42 pm - Rao_ankit: call pr btana tha
+23/08/23, 5:43 pm - Rao_ankit: 😁🤭
+23/08/23, 5:43 pm - Buddhudi: 🙄
+23/08/23, 5:43 pm - Buddhudi: bhot he
+23/08/23, 5:43 pm - Rao_ankit: are sachi me
+23/08/23, 5:43 pm - Buddhudi: ase bta do to
+23/08/23, 5:43 pm - Rao_ankit: nhi
+23/08/23, 5:43 pm - Buddhudi: thik fir kro wait
+23/08/23, 5:43 pm - Buddhudi: 😁`;
+
+            const lines = SAMPLE.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 500);
+            sessionStorage.setItem('prefetch_messages', JSON.stringify(lines));
+          } catch (e) {
+            console.warn('prefetch seed failed', e);
+          }
+
+          // start background fetch of real chat data (non-blocking)
+          fetch((import.meta.env.VITE_API_URL || 'http://localhost:3000') + '/api/messages')
+            .then(r => r.json())
+            .then(d => {
+              if (d && d.messages) sessionStorage.setItem('chat_messages', JSON.stringify(d.messages));
+            })
+            .catch(() => {});
+
           setTimeout(() => {
             setLoading(false); // ✅ hide loader
             navigate("/main");

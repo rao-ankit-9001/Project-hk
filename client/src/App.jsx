@@ -25,8 +25,10 @@ function App() {
             <PrivateRoute>
               <>
                 <Nav setLoading={setLoading} />
-                <Mainroutes setLoading={setLoading} /> {/* ✅ pass down */}
-                <Footer />
+                <div className="main-content">
+                  <Mainroutes setLoading={setLoading} /> {/* ✅ pass down */}
+                  <Footer />
+                </div>
               </>
             </PrivateRoute>
           }
