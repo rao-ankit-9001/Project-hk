@@ -13,7 +13,7 @@ export default function SpecialMoments() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-6">
+    <div className="min-h-screen bg-linear-to-br from-pink-100 via-purple-100 to-blue-100 p-6">
       {/* Header */}
       <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-pink-600 drop-shadow-md">
         Our Special Moments 💖

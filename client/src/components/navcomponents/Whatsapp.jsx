@@ -185,7 +185,7 @@ export default function Whatsapp() {
                         ${isMe ? "ml-auto bg-[#144D37] text-white" : "bg-gray-800 text-white"}
                         hover:scale-[1.02] hover:shadow-lg max-w-[85%] sm:max-w-[65%] md:max-w-[50%]`}
                     >
-                      <p className="whitespace-pre-wrap break-words">{msg.text}</p>
+                      <p className="whitespace-pre-wrap wrap-break-word">{msg.text}</p>
                       <div className={`text-[9px] opacity-70 mt-1 text-right ${isMe ? "text-white" : "text-white"}`}>
                         {msg.time} {isMe && "✓✓"}
                       </div>
