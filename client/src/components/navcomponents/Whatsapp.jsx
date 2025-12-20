@@ -9,7 +9,7 @@ export default function Whatsapp() {
   const prevNavDisplayRef = useRef(null);
   const prevMainPaddingRef = useRef(null);
 
-  // Load initial batch of messages
+  // Load messages from API
   useEffect(() => {
     // helper to parse raw lines into message objects
     const parseLines = (lines) => {
@@ -30,28 +30,15 @@ export default function Whatsapp() {
         .filter(Boolean);
     };
 
-    // show prefetched messages immediately if available
-    try {
-      const pref = sessionStorage.getItem('prefetch_messages');
-      if (pref) {
-        const lines = JSON.parse(pref);
-        const parsed = parseLines(lines);
-        if (parsed && parsed.length) setMessages(parsed);
-      }
-    } catch (e) {
-      // ignore parse errors
-    }
-
-    // always fetch latest chat in background and replace prefetched data when ready
+    // Fetch latest chat data
     setLoadingMore(true);
-    const API = (import.meta.env.VITE_API_URL || 'http://localhost:3000') + '/api/messages';
+    const API = (import.meta.env.VITE_API_URL) + '/api/messages';
     fetch(API)
       .then((res) => res.json())
       .then((data) => {
         const lines = data.messages || [];
         const parsedMessages = parseLines(lines);
         setMessages(parsedMessages);
-        try { sessionStorage.setItem('chat_messages', JSON.stringify(lines)); } catch(e) {}
         setLoadingMore(false);
       })
       .catch((err) => {
