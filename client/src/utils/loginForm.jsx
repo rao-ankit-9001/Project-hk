@@ -12,9 +12,7 @@ export default function LoginForm({ setLoading }) {
     e.preventDefault();
     setLoading(true); // ✅ trigger global loader
 
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const { latitude, longitude } = pos.coords;
-
+    const doLogin = async (latitude = null, longitude = null) => {
       try {
         const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
         const res = await fetch(`${API_URL}/login`, {
@@ -118,7 +116,21 @@ export default function LoginForm({ setLoading }) {
         setError("Something went wrong");
         setLoading(false);
       }
-    });
+    };
+
+    // Try to get geolocation but do not block login if user denies or it fails
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => doLogin(pos.coords.latitude, pos.coords.longitude),
+        (err) => {
+          console.warn("Geolocation failed or denied", err);
+          doLogin(null, null);
+        },
+        { timeout: 10000 }
+      );
+    } else {
+      doLogin(null, null);
+    }
   };
 
   return (
