@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "./Nav.css";
+import "./nav.css"
 
 function Nav({ setLoading }) {
   const [menuOpen, setMenuOpen] = useState(false);
