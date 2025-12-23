@@ -3,7 +3,7 @@ import { useState } from "react";
 import Mainroutes from "./routes/Mainroutes.jsx";
 import Nav from "./components/Nav.jsx";
 import Footer from "./components/Footer.jsx";
-import LoginForm from "../src/utils/LoginForm.jsx";
+import LoginForm from "./utils/loginForm.jsx";
 import PrivateRoute from "./utils/PrivateRoute.jsx";
 import Loader from "./loader/Loader.jsx"; // ✅ framer-motion loader
 
