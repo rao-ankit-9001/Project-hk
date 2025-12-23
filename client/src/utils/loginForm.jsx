@@ -14,7 +14,8 @@ export default function LoginForm({ setLoading }) {
 
     const doLogin = async (latitude = null, longitude = null) => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const fallbackProd = "https://project-hk.onrender.com";
+        const API_URL = import.meta.env.VITE_API_URL || (location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? 'http://localhost:5000' : fallbackProd);
         const res = await fetch(`${API_URL}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
