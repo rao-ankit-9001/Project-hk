@@ -21,6 +21,12 @@ const SECRET_KEY = process.env.JWT_SECRET;
 app.use(cors());
 app.use(cors({ origin: "*", // ya specific Netlify domain 
 credentials: true }));
+app.use(cors({
+  origin: "https://your-netlify-domain.netlify.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(express.json());
 app.use(requestIp.mw()); // ✅ attach IP middleware
 
