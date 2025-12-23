@@ -14,7 +14,7 @@ const Loader = ({ message = "Something sweet is loading..." }) => {
           className="mb-10 w-32 h-32 rounded-full border border-pink-300 relative flex items-center justify-center"
         >
           <motion.div
-            className="absolute inset-2 rounded-full bg-gradient-to-br from-pink-200 to-purple-100 backdrop-blur-md"
+            className="absolute inset-2 rounded-full bg-linear-to-br from-pink-200 to-purple-100 backdrop-blur-md"
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />

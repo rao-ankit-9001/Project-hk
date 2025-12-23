@@ -18,23 +18,20 @@ const MONGO_URI = process.env.MONGO_URI;
 const SECRET_KEY = process.env.JWT_SECRET;
 
 // Middleware
-app.use(cors());
-app.use(cors({ origin: "*", // ya specific Netlify domain 
-credentials: true }));
+
 app.use(cors({
   origin: "https://hamari-khani.netlify.app",
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+ 
 }));
 app.use(express.json());
 app.use(requestIp.mw()); // ✅ attach IP middleware
 
 // ✅ Ensure DB connection before handling routes
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
+// app.use(async (req, res, next) => {
+ connectDB();
+  // next();
+// });
 
 
 
