@@ -22,7 +22,7 @@ app.use(cors());
 app.use(cors({ origin: "*", // ya specific Netlify domain 
 credentials: true }));
 app.use(cors({
-  origin: "https://your-netlify-domain.netlify.app",
+  origin: "https://hamari-khani.netlify.app",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
