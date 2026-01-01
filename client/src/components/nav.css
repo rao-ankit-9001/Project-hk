@@ -161,3 +161,10 @@
     }
 }
 
+/* When the Whatsapp component requests fullscreen, hide the global nav
+   using a class on <body>. This ensures the nav is hidden on all viewports
+   (including mobile) and overrides other styles. */
+body.whatsapp-fullscreen .nav {
+    display: none !important;
+}
+

@@ -104,14 +104,20 @@ export default function Whatsapp() {
   }, [messages]);
 
   return (
-    <div className={`${isFullscreen ? "fixed inset-0  bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center "}`}>
+    <div
+      className={`${isFullscreen ? "fixed inset-0  bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center "}`}
+      style={isFullscreen ? { paddingTop: 'env(safe-area-inset-top)' } : undefined}
+    >
       <div className={`flex flex-col w-full ${isFullscreen ? "h-screen" : "max-w-full md:max-w-5xl md:mt-0  md:h-[90vh]"}`}>
         
         {/* CHAT WINDOW */}
         <div className="w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col overflow-hidden h-screen ">
           
           {/* Profile Bar - FIXED (sticky) */}
-         <div className="sticky top-0 bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20">
+          <div
+            className="sticky top-0 bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20"
+            style={isFullscreen ? { top: 'env(safe-area-inset-top)' } : undefined}
+          >
             <div className="w-8 md:w-10 h-8 md:h-10 rounded-full overflow-hidden shrink-0">
               <img 
                 src= {whatsappbg}
