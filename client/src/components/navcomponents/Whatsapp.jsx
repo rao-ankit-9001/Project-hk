@@ -8,6 +8,8 @@ export default function Whatsapp() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const prevNavDisplayRef = useRef(null);
   const prevMainPaddingRef = useRef(null);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   // Load messages from API
   useEffect(() => {
@@ -88,6 +90,25 @@ export default function Whatsapp() {
     };
   }, [isFullscreen]);
 
+  // measure header height so we can offset content when header becomes fixed
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const h = headerRef.current.getBoundingClientRect().height || 0;
+        setHeaderHeight(Math.round(h));
+      } else {
+        setHeaderHeight(0);
+      }
+    };
+    updateHeaderHeight();
+    window.addEventListener("resize", updateHeaderHeight);
+    window.addEventListener("orientationchange", updateHeaderHeight);
+    return () => {
+      window.removeEventListener("resize", updateHeaderHeight);
+      window.removeEventListener("orientationchange", updateHeaderHeight);
+    };
+  }, [isFullscreen]);
+
   // handle infinite scroll / load newer messages on scroll-to-bottom
   useEffect(() => {
     // All messages loaded upfront, no need for scroll handler
@@ -104,20 +125,17 @@ export default function Whatsapp() {
   }, [messages]);
 
   return (
-    <div
-      className={`${isFullscreen ? "fixed inset-0  bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center "}`}
-      style={isFullscreen ? { paddingTop: 'env(safe-area-inset-top)' } : undefined}
-    >
+    <div className={`${isFullscreen ? "fixed inset-0  bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center "}`}>
       <div className={`flex flex-col w-full ${isFullscreen ? "h-screen" : "max-w-full md:max-w-5xl md:mt-0  md:h-[90vh]"}`}>
         
         {/* CHAT WINDOW */}
         <div className="w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col overflow-hidden h-screen ">
           
           {/* Profile Bar - FIXED (sticky) */}
-          <div
-            className="sticky top-0 bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20"
-            style={isFullscreen ? { top: 'env(safe-area-inset-top)' } : undefined}
-          >
+         <div
+           ref={headerRef}
+           className={`${isFullscreen ? "fixed left-0 right-0 top-0" : "sticky top-0"} bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20`}
+         >
             <div className="w-8 md:w-10 h-8 md:h-10 rounded-full overflow-hidden shrink-0">
               <img 
                 src= {whatsappbg}
@@ -141,27 +159,33 @@ export default function Whatsapp() {
           </div>
 
           {/* Messages */}
-          <div ref={containerRef} className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white">
+          <div
+            ref={containerRef}
+            className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white"
+            style={{ paddingTop: isFullscreen ? `${headerHeight}px` : undefined }}
+          >
             
             {/* Left Decorative Background Image - absolute inside container */}
-            <div 
-              className="fixed left-0 top-10 h-full pointer-events-none "
+            <div
+              className="fixed left-0 h-full pointer-events-none"
               style={{
                 width: '50%',
                 opacity: 10,
-                 backgroundImage: `url(${whatsappbg})`,
+                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
+                backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             />
 
             {/* Right Decorative Background Image - absolute inside container */}
-            <div 
-              className="fixed right-0 top-10 h-full pointer-events-none"
+            <div
+              className="fixed right-0 h-full pointer-events-none"
               style={{
                 width: '50%',
-                opacity:10,
-                 backgroundImage: `url(${whatsappbg})`,
+                opacity: 10,
+                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
+                backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}

@@ -168,3 +168,17 @@ body.whatsapp-fullscreen .nav {
     display: none !important;
 }
 
+/* Extra-safety: cover cases where inline styles or other rules keep the nav visible.
+   Force it out of layout and make it non-interactive while whatsapp is fullscreen. */
+body.whatsapp-fullscreen .nav,
+html.whatsapp-fullscreen .nav,
+.whatsapp-fullscreen .nav {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
