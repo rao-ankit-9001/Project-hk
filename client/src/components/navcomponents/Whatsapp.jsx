@@ -129,13 +129,10 @@ export default function Whatsapp() {
       <div className={`flex flex-col w-full ${isFullscreen ? "h-screen" : "max-w-full md:max-w-5xl md:mt-0  md:h-[90vh]"}`}>
         
         {/* CHAT WINDOW */}
-        <div className="w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col overflow-hidden h-screen ">
+        <div className={ `${isFullscreen ? "mt-5 w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col" : "mt-0 w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col"}`}>
           
           {/* Profile Bar - FIXED (sticky) */}
-         <div
-           ref={headerRef}
-           className={`${isFullscreen ? "fixed left-0 right-0 top-0" : "sticky top-0"} bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20`}
-         >
+         <div className="sticky top-0 bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20">
             <div className="w-8 md:w-10 h-8 md:h-10 rounded-full overflow-hidden shrink-0">
               <img 
                 src= {whatsappbg}
@@ -159,33 +156,27 @@ export default function Whatsapp() {
           </div>
 
           {/* Messages */}
-          <div
-            ref={containerRef}
-            className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white"
-            style={{ paddingTop: isFullscreen ? `${headerHeight}px` : undefined }}
-          >
+          <div ref={containerRef} className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white">
             
             {/* Left Decorative Background Image - absolute inside container */}
-            <div
-              className="fixed left-0 h-full pointer-events-none"
+            <div 
+              className="fixed left-0 top-10 h-full pointer-events-none "
               style={{
                 width: '50%',
                 opacity: 10,
-                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
-                backgroundImage: `url(${whatsappbg})`,
+                 backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             />
 
             {/* Right Decorative Background Image - absolute inside container */}
-            <div
-              className="fixed right-0 h-full pointer-events-none"
+            <div 
+              className="fixed right-0 top-10 h-full pointer-events-none"
               style={{
                 width: '50%',
-                opacity: 10,
-                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
-                backgroundImage: `url(${whatsappbg})`,
+                opacity:10,
+                 backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
