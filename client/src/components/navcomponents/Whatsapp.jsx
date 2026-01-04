@@ -5,9 +5,13 @@ export default function Whatsapp() {
   const [messages, setMessages] = useState([]); // displayed messages
   const [loadingMore, setLoadingMore] = useState(false);
   const containerRef = useRef(null);
+  const headerRef = useRef(null);
+  const inputRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const prevNavDisplayRef = useRef(null);
   const prevMainPaddingRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const [inputHeight, setInputHeight] = useState(0);
 
   // Load messages from API
   useEffect(() => {
@@ -88,6 +92,23 @@ export default function Whatsapp() {
     };
   }, [isFullscreen]);
 
+  // measure header/input heights so messages container can be offset correctly
+  useEffect(() => {
+    const updateHeights = () => {
+      const h = headerRef.current?.getBoundingClientRect().height || 0;
+      const i = inputRef.current?.getBoundingClientRect().height || 0;
+      setHeaderHeight(Math.round(h));
+      setInputHeight(Math.round(i));
+    };
+    updateHeights();
+    window.addEventListener('resize', updateHeights);
+    window.addEventListener('orientationchange', updateHeights);
+    return () => {
+      window.removeEventListener('resize', updateHeights);
+      window.removeEventListener('orientationchange', updateHeights);
+    };
+  }, [isFullscreen, messages]);
+
   // handle infinite scroll / load newer messages on scroll-to-bottom
   useEffect(() => {
     // All messages loaded upfront, no need for scroll handler
@@ -105,17 +126,18 @@ export default function Whatsapp() {
 
   return (
     <div
-      className={`${isFullscreen ? "fixed inset-0  bg-[#e5ddd5] flex items-center  justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center "}`}
-      style={isFullscreen ? { paddingTop: 'env(safe-area-inset-top)' } : undefined}
+      className={isFullscreen ? "fixed inset-0 bg-[#e5ddd5] flex items-center justify-center" : "min-h-screen bg-[#e5ddd5] flex items-center justify-center"}
+      style={isFullscreen ? { paddingTop: 'env(safe-area-inset-top)', overflow: 'hidden' } : undefined}
     >
-      <div className={`flex flex-col w-full ${isFullscreen ? "h-screen" : "max-w-full md:max-w-5xl md:mt-0  md:h-[90vh]"}`}>
-        
+      <div className={`flex flex-col w-full ${isFullscreen ? "h-full" : "max-w-full md:max-w-5xl md:mt-0 md:h-[90vh]"}`}>
+
         {/* CHAT WINDOW */}
-        <div className={ `${isFullscreen ? "mt-5 w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col" : "mt-0 w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col"}`}>
-          
-          {/* Profile Bar - FIXED (sticky) */}
+        <div className={`w-full bg-white shadow-lg rounded-lg md:rounded-xl flex flex-col ${isFullscreen ? 'h-full' : ''}`}>
+
+          {/* Profile Bar - FIXED (sticky/fixed) */}
           <div
-            className="sticky top-0 bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20"
+            ref={headerRef}
+            className={`${isFullscreen ? 'fixed left-0 right-0 top-0' : 'sticky top-0'} bg-[#075e54] text-white p-2 md:p-4 flex items-center gap-2 md:gap-3 shrink-0 z-20`}
             style={isFullscreen ? { top: 'env(safe-area-inset-top)' } : undefined}
           >
             <div className="w-8 md:w-10 h-8 md:h-10 rounded-full overflow-hidden shrink-0">
@@ -141,27 +163,38 @@ export default function Whatsapp() {
           </div>
 
           {/* Messages */}
-          <div ref={containerRef} className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white">
+          <div
+            ref={containerRef}
+            className="flex-1 overflow-y-auto p-2 md:p-4 space-y-2 md:space-y-3 min-h-0 relative bg-white"
+            style={{
+              paddingTop: isFullscreen ? `${headerHeight}px` : undefined,
+              paddingBottom: isFullscreen ? `${inputHeight}px` : undefined,
+              scrollBehavior: 'smooth',
+              WebkitOverflowScrolling: 'touch'
+            }}
+          >
             
             {/* Left Decorative Background Image - absolute inside container */}
-            <div 
-              className="fixed left-0 top-10 h-full pointer-events-none "
+            <div
+              className="fixed left-0 h-full pointer-events-none"
               style={{
                 width: '50%',
                 opacity: 10,
-                 backgroundImage: `url(${whatsappbg})`,
+                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
+                backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
             />
 
             {/* Right Decorative Background Image - absolute inside container */}
-            <div 
-              className="fixed right-0 top-10 h-full pointer-events-none"
+            <div
+              className="fixed right-0 h-full pointer-events-none"
               style={{
                 width: '50%',
-                opacity:10,
-                 backgroundImage: `url(${whatsappbg})`,
+                opacity: 10,
+                top: isFullscreen ? `${headerHeight}px` : '2.5rem',
+                backgroundImage: `url(${whatsappbg})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -203,7 +236,11 @@ export default function Whatsapp() {
           </div>
 
           {/* Input */}
-          <div className="relative z-20 border-t p-2 md:p-3 flex gap-1 md:gap-2 items-center bg-[#f0f0f0] shrink-0">
+          <div
+            ref={inputRef}
+            className="relative z-20 border-t p-2 md:p-3 flex gap-1 md:gap-2 items-center bg-[#f0f0f0] shrink-0"
+            style={isFullscreen ? { paddingBottom: 'env(safe-area-inset-bottom)' } : undefined}
+          >
             <input
               type="text"
               placeholder="Message..."
