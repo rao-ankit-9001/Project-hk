@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import whatsappbg from "../../assets/whatsappbg.jpg";
+import whatsappbg from "../../assets/whatsappbg.png";
+
 
 export default function Whatsapp() {
   const [messages, setMessages] = useState([]); // displayed messages
@@ -142,7 +143,7 @@ export default function Whatsapp() {
           >
             <div className="w-8 md:w-10 h-8 md:h-10 rounded-full overflow-hidden shrink-0">
               <img 
-                src= {whatsappbg}
+                src= "https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595297/IMG_20240227_122831_669_w24rnw.jpg"
                 alt="Profile" 
                 className="w-full h-full object-cover"
               />
@@ -178,10 +179,10 @@ export default function Whatsapp() {
             <div
               className="fixed left-0 h-full pointer-events-none"
               style={{
-                width: '50%',
+                width: '0%',
                 opacity: 10,
                 top: isFullscreen ? `${headerHeight}px` : '2.5rem',
-                backgroundImage: `url(${whatsappbg})`,
+                // backgroundImage: `url("${whatsappbg2}")`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -191,7 +192,7 @@ export default function Whatsapp() {
             <div
               className="fixed right-0 h-full pointer-events-none"
               style={{
-                width: '50%',
+                width: '100%',
                 opacity: 10,
                 top: isFullscreen ? `${headerHeight}px` : '2.5rem',
                 backgroundImage: `url(${whatsappbg})`,

@@ -25,7 +25,7 @@ function Maidsection() {
     <h3 className="text-lg font-semibold mb-2">
       WhatsApp — First chat
     </h3>
-      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop" alt="img" />
+      <img src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595319/Screenshot_20251210-195332.WhatsApp_Business_uhc2og.png" alt="img" />
   </div>
 
   {/* Instagram */}
@@ -36,21 +36,21 @@ function Maidsection() {
     <div className="flex gap-4 mb-4">
       <div className="ring-2 ring-pink-500 w-16 h-16 rounded-full overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1520975652207-8b456906c813?q=80&w=400&auto=format&fit=crop"
+          src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595310/Screenshot_20240127-165843_jfq89s.png"
           alt="Story"
           className="w-full h-full object-cover"
         />
       </div>
       <div className="ring-2 ring-pink-500 w-16 h-16 rounded-full overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop"
+          src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767617744/Screenshot_20240217-195753_bw1exe.jpg"
           alt="Story"
           className="w-full h-full object-cover"
         />
       </div>
       <div className="ring-2 ring-pink-500 w-16 h-16 rounded-full overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?q=80&w=400&auto=format&fit=crop"
+          src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595311/Screenshot_20240127-213759_fpvgbd.png"
           alt="Story"
           className="w-full h-full object-cover"
         />
@@ -59,21 +59,21 @@ function Maidsection() {
    <div className="grid grid-cols-2 gap-4">
   <div className="ig-item">
     <img
-      src="https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=600&auto=format&fit=crop"
+      src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595289/IMG_20240123_195009391_nnsmsi.jpg"
       alt="First selfie"
       className="w-full h-full object-cover rounded-lg"
     />
   </div>
   <div className="ig-item">
     <img
-      src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=600&auto=format&fit=crop"
+      src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595290/IMG_20240126_081201831_HDR_futni3.jpg"
       alt="Coffee date"
       className="w-full h-full object-cover rounded-lg"
     />
   </div>
   <div className="ig-item col-span-2">
     <img
-      src="https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?q=80&w=600&auto=format&fit=crop"
+      src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767617907/IMG-20240126-WA0062_vguu6h.jpg"
       alt="Sunset walk"
       className="w-full h-full object-cover rounded-lg"
     />
@@ -96,7 +96,7 @@ function Maidsection() {
     </div>
     <div className="snap-card relative">
       <img
-        src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=600&auto=format&fit=crop"
+        src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767623680/Screenshot_20260105-200307.Files_by_Google_1_rxjov8.png"
         alt="Snap memory"
         className="w-full h-48 object-cover rounded-lg"
       />
@@ -225,7 +225,7 @@ function Maidsection() {
       onEnded={() => setShowVideo(false)}   // 👈 Ye line video khatam hone par hide karegi
       className="w-full h-100 rounded-lg border-4 border-pink-200"
     >
-      <source src={anniversaryVideo} type="video/mp4" />
+      <source src="https://res.cloudinary.com/dxgfbjfh6/video/upload/v1767595840/Snapchat-1298994738_ezkmca.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   </div>

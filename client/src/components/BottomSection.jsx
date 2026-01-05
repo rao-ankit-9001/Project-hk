@@ -19,11 +19,31 @@ function BottomSection() {
   const firstDateRef = useRef(null);
   const anniversaryRef = useRef(null);
   const letterSectionRef = useRef(null);
+  const firstMeetScrollRef = useRef(null);
+  const firstDateScrollRef = useRef(null);
+  const anniversaryScrollRef = useRef(null);
+
+  const [selectedGallery, setSelectedGallery] = useState(null); // 'firstMeet' | 'firstDate' | 'anniversary'
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isHovering, setIsHovering] = useState({ firstMeet: false, firstDate: false, anniversary: false });
 
   const fullTexts = {
     firstMeet: "“priya ye safar logo k liye ek safar tha lekin apni phli mulakat thi yaad hai m baar baar aapse puchta tha apne mile wo khani btao pta nhi ku usko sun k alg hu sukoon milta tha us din pta nhi kya huaa tha koi tension na fikar bs train aane ka intzar. lag rha tha jaise bs ab aur kuch nhi chahiye zindagi me. Train me itne shor ke beech apn kitna busy the bs mujhe aap aur aapko mai dikh rha tha. Indore mere liye ek nya shar nhi tha meri ek nyi khani thi jo mujhe forever aapko sunni thi.”",
     firstDate: "“Hamari pehli date ek zoo se shuru hui. Woh zoo jitna socha tha usse kahin zyada khoobsurat nikla, lekin usse bhi zyada khoobsurat tha tumhare saath usse dekhna. Aaj bhi us zoo ki ek‑ek yaad mere andar zinda hai. Us din pata nahi kyun main tumhara haath pakadne mein hichkichaa raha tha, par aakhir tumne khud hi pakad liya. Jitna sukoon zoo ke animals dekhne mein nahi mil raha tha, usse zyada tumhare saath hone mein tha. Aur baar‑baar guide keh raha tha — ‘Ankit idhar aao, dekho idhar, abhi to bahut bada hai, ghoomte‑ghoomte pair dukhne lag jayenge’ — aur main bas tumhari muskaan mein kho gaya tha. Aaj woh zoo to wahi hai, lekin hamare beech bahut kuch badal gaya. Mere paas dene ko ab kuch nahi, bas woh yaadein hain jo main hamesha tumhe de sakta hoon.”",
     anniversary: "“Ye pal bhi kitna khoobsurat tha na… kab baat karte‑karte ek‑dusre ke ho gaye, pata hi nahi chala. Maze‑maze mein ek‑dusre ko propose kar diya — na koi romantic line, na koi romantic scene — aur itne close ho gaye ki baat kiye bina na subah hoti, na raat ko neend aati. Main wait kar raha tha ki kab jaldi se 5 months complete ho aur Buddhudi ko surprise du. Waise ‘Buddhudi’ naam bhi ajeeb hai na — tumhara thoda bacha banna aur mera ‘buddhu’ bol kar samjhana, aur buddhu se meri Buddhudi ban gayi. Aaj bhi 5 months sirf 5 din ke barabar lagte hain. Bahut mushkil hai un yaadon ko bhulana — har jagah mera naam hona: room ki diwaron par, paani ki bottle par, study table par, aur tumhare dil par.”"
+  };
+
+  // Galleries: add as many URLs as you like for each section
+  const galleries = {
+    firstMeet: [
+      "https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595838/Snapchat-547978172_m0sns6.jpg"
+    ],
+    firstDate: [
+      "https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595088/IMG-20240125-WA0014_vc847z.jpg"
+    ],
+    anniversary: [
+      "https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595413/Screenshot_20251231-101750.Files_by_Google_dh9bez.png"
+    ]
   };
 
   const loveEmojis = ["💕", "💖", "💗", "💝", "💞", "💓", "❤️", "🥰"];
@@ -128,8 +148,8 @@ function BottomSection() {
                 First meet
               </h3>
               <img
-                className="w-full h-56 object-cover rounded-xl shadow-md hover:shadow-lg transition mb-3"
-                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1200&auto=format&fit=crop"
+                className="w-full h-auto object-contain rounded-xl shadow-md hover:shadow-lg transition mb-3"
+                src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595838/Snapchat-547978172_m0sns6.jpg"
                 alt="First meet"
               />
               <p className="text-md font-medium md:text-sm lg:text-base text-gray-700 leading-relaxed min-h-24 h-auto">
@@ -149,8 +169,8 @@ function BottomSection() {
                 First date
               </h3>
               <img
-                className="w-full h-56 object-cover rounded-xl shadow-md hover:shadow-lg transition mb-3"
-                src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=1200&auto=format&fit=crop"
+                className="w-full h-auto object-contain rounded-xl shadow-md hover:shadow-lg transition mb-3"
+                src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595088/IMG-20240125-WA0014_vc847z.jpg"
                 alt="First date"
               />
               <p className="text-md font-medium md:text-sm lg:text-base text-gray-700 leading-relaxed min-h-24 h-auto">
@@ -175,8 +195,8 @@ function BottomSection() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Image */}
               <img
-                className="w-full h-56 md:h-72 object-cover rounded-xl shadow-md hover:shadow-lg transition"
-                src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=1200&auto=format&fit=crop"
+                className="w-full h-auto object-contain rounded-xl shadow-md hover:shadow-lg transition"
+                src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595413/Screenshot_20251231-101750.Files_by_Google_dh9bez.png"
                 alt="Anniversary"
               />
 
@@ -248,11 +268,7 @@ function BottomSection() {
                      letterSpacing: "0.5px",
                      lineHeight: "2"
                    }}>
-                  Tum meri subah ki roshni ho, meri raat ki rahat ho. Har din
-                  tumhari muskaan meri zindagi ko roshan karti hai. Agar kabhi tumhe
-                  lage ki tum akeli ho, ya duniya tumse door hai, to yaad rakhna —
-                  main hamesha tumhare saath hoon. Tum meri kahani ho, meri dua ho,
-                  meri zindagi ho. Aur main tumhe hamesha pyaar karta rahunga.
+                  Priya ❤️, ye chhota sa letter sirf tumhare liye hai. Har lafz mein meri dil ki baat chhupi hai. Tum meri zindagi ki sabse khoobsurat kahani ho. Tumhare bina main adhoora hoon. Har pal m tumhare saath bitana chahta tha. priya pta nhi kya kahu tumhare liye, lekin itna janta hoon ki tum meri zindagi ka sabse khoobsurat hissa ho. Priya pta nhi kya hua apne beech ya fir itne din ka hi saath the shayad. Priya m har roj rota rhta tha na ki aajo priya meri life me pta h m ku krta tha kuki mujhe wo pal yaad aate the jisme aap mere the wo waqt jb m aapke saath hota tha. Wo past mujhe aapse roj aur pyaar krta the aur m jis se pyaar krta the wo past the na ki aap kuki ager m aapse pyaar krta to m aaj bhi jaise ho wase chahe mere saath kasisa bhi behave kro lekin m pyaar krta. lekin priya merko meri Buddhudi chahiye thi aur chahiye gi uske lawa m kisi aur ko nhi accept kr skta ab wala aapka bhavior merko bht dukh deta hai priya. M jaisa bhi tha priya lekin m aapse bhot pyaar krta tha. aapke jitna maine akbhi kisi ko nhi kiya. aap ki ek ek chiz m khud k pass rakhta tha aapke kele wale chips ki bhot yaad aati hai yaar khride nhi jate mujh se dil me satisfactioin nhi milta pta nhi esa lagta wo test nhi aayega. Yaad to priya bhot chizo ki aati hai lekin ab unki jgh replace hone lag gyi. Good Bye Buddhudi ❤️.
                 </p>
               </div>
             )}

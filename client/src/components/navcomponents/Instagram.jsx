@@ -10,13 +10,13 @@ export default function InstagramChat() {
       { from: "her", text: "Heyy 😘", time: "04:10 PM" },
       { from: "me", text: "Hi cutie 💫", time: "04:11 PM" },
       { from: "her", text: "Miss you so much 💕", time: "04:12 PM" },
-      { from: "me", text: "Same here 🥺", time: "04:13 PM" },
+      { from: "me", text: "Miss to m bhi bhot karta hu 🥺", time: "04:13 PM" },
       { from: "her", text: "Call me later 📞", time: "04:15 PM" },
     ]);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-indigo-50 flex items-center justify-center p-3">
+    <div className="min-h-screen bg-linear-to-br from-pink-50 via-rose-50 to-indigo-50 flex items-center justify-center p-3">
       <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-pink-100 overflow-hidden flex flex-col h-[80vh]">
         
         {/* Header */}
@@ -46,10 +46,10 @@ export default function InstagramChat() {
                 <div
                   className={`max-w-[75%] rounded-2xl px-3 py-2 shadow-sm
                     ${isMe
-                      ? "bg-gradient-to-br from-indigo-100 to-purple-100 text-gray-800"
-                      : "bg-gradient-to-br from-pink-100 to-rose-100 text-gray-800"}`}
+                      ? "bg-linear-to-br from-indigo-100 to-purple-100 text-gray-800"
+                      : "bg-linear-to-br from-pink-100 to-rose-100 text-gray-800"}`}
                 >
-                  <p className="whitespace-pre-wrap break-words">{m.text}</p>
+                  <p className="whitespace-pre-wrap break-word">{m.text}</p>
                   <div className="text-[10px] text-gray-500 mt-1 text-right">{m.time}</div>
                 </div>
               </div>

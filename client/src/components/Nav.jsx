@@ -32,9 +32,9 @@ function Nav({ setLoading }) {
         <NavLink to="/main/instagram" className={({ isActive }) => `tab ${isActive ? "active" : ""}`} onClick={handleNavClick}>
           📸 Instagram
         </NavLink>
-        <NavLink to="/main/snapchat" className={({ isActive }) => `tab ${isActive ? "active" : ""}`} onClick={handleNavClick}>
+        {/* <NavLink to="/main/snapchat" className={({ isActive }) => `tab ${isActive ? "active" : ""}`} onClick={handleNavClick}>
           👻 Snapchat
-        </NavLink>
+        </NavLink> */}
         <NavLink to="/main/moments" className={({ isActive }) => `tab ${isActive ? "active" : ""}`} onClick={handleNavClick}>
           💖 Special Moments
         </NavLink>

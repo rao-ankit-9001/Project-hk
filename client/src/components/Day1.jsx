@@ -89,7 +89,7 @@ function Day1() {
         <br />
           <div className="vow float-line">
         <CuteTapWrapper>
-          <span className="vow-text hover:scale-110 duration-300 ease-in leading-7">“Har subah tumhari roshni se shuru hoti hai, har raat tumhari aawaz se aaram paati hai.”</span>
+          <span className="vow-text hover:scale-110 duration-300 ease-in leading-7">“Subah tumhari baaton se din shuru hota tha, raat tumhari saans ki ahat se khatm.”</span>
           <span className="balloon">
             <span className="string"></span>
           </span>
@@ -98,7 +98,7 @@ function Day1() {
 
         <div className="vow float-line">
            <CuteTapWrapper>
-          <span className="vow-text hover:scale-110 duration-300 ease-in leading-7">“Tum meri pehli dua ho, aur aakhri khwahish bhi — bas tum.”</span>
+          <span className="vow-text hover:scale-110 duration-300 ease-in leading-7">“Tum meri life ki pehli ladki thi, jiske liye m bol skta tha ladki ho to priya jaise — bas tum.”</span>
           <span className="balloon">
             <span className="string"></span>
           </span>
