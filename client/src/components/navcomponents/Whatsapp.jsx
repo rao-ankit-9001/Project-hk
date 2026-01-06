@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import whatsappbg from "../../assets/whatsappbg.png";
+import whatsappbg from "../../assets/whatsappbg.jpg";
 
 
 export default function Whatsapp() {
@@ -196,7 +196,7 @@ export default function Whatsapp() {
                 opacity: 10,
                 top: isFullscreen ? `${headerHeight}px` : '2.5rem',
                 backgroundImage: `url(${whatsappbg})`,
-                backgroundSize: 'contain',
+                backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center'
               }}
