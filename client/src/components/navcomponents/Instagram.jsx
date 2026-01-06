@@ -22,7 +22,7 @@ export default function InstagramChat() {
         {/* Header */}
         <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-pink-100 px-4 py-3 flex items-center gap-3">
           <img
-            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop"
+            src="https://res.cloudinary.com/dxgfbjfh6/image/upload/v1767595297/IMG_20240227_122831_669_w24rnw.jpg"
             alt="Buddhudi"
             className="w-8 h-8 rounded-full object-cover"
           />

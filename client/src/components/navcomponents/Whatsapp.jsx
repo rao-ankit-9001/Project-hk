@@ -196,7 +196,8 @@ export default function Whatsapp() {
                 opacity: 10,
                 top: isFullscreen ? `${headerHeight}px` : '2.5rem',
                 backgroundImage: `url(${whatsappbg})`,
-                backgroundSize: 'cover',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center'
               }}
             />
